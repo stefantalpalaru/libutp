@@ -23,6 +23,8 @@
 #ifndef __UTP_TYPES_H__
 #define __UTP_TYPES_H__
 
+#include <inttypes.h>
+
 // Allow libutp consumers or prerequisites to override PACKED_ATTRIBUTE
 #ifndef PACKED_ATTRIBUTE
 #if defined BROKEN_GCC_STRUCTURE_PACKING && defined __GNUC__
@@ -91,13 +93,8 @@ typedef unsigned int uint;
 typedef unsigned int uint32;
 typedef signed int int32;
 
-#ifdef _MSC_VER
-typedef unsigned __int64 uint64;
-typedef signed __int64 int64;
-#else
-typedef unsigned long long uint64;
-typedef long long int64;
-#endif
+typedef uint64_t uint64;
+typedef int64_t int64;
 
 /* compile-time assert */
 #ifndef CASSERT
@@ -106,10 +103,6 @@ typedef long long int64;
 
 CASSERT(8 == sizeof(uint64), sizeof_uint64_is_8)
 CASSERT(8 == sizeof(int64), sizeof_int64_is_8)
-
-#ifndef INT64_MAX
-#define INT64_MAX 0x7fffffffffffffffLL
-#endif
 
 // always ANSI
 typedef const char * cstr;

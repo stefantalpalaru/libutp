@@ -29,6 +29,8 @@
 #include <limits.h> // for UINT_MAX
 #include <time.h>
 
+#include <limits>
+
 #include "utp_types.h"
 #include "utp_packedsockaddr.h"
 #include "utp_internal.h"
@@ -151,12 +153,14 @@ enum {
 	ST_STATE = 2,		// State packet. Used to transmit an ACK with no data.
 	ST_RESET = 3,		// Terminate connection forcefully.
 	ST_SYN = 4,			// Connect SYN
-	ST_NUM_STATES,		// used for bounds checking
+	ST_NUM_STATES		// used for bounds checking
 };
 
+#if UTP_DEBUG_LOGGING
 static const cstr flagnames[] = {
 	"ST_DATA","ST_FIN","ST_STATE","ST_RESET","ST_SYN"
 };
+#endif
 
 enum CONN_STATE {
 	CS_UNINITIALIZED = 0,
@@ -172,9 +176,11 @@ enum CONN_STATE {
 	CS_DESTROY
 };
 
+#if UTP_DEBUG_LOGGING
 static const cstr statenames[] = {
 	"UNINITIALIZED", "IDLE","SYN_SENT", "SYN_RECV", "CONNECTED","CONNECTED_FULL","GOT_FIN","DESTROY_DELAY","FIN_SENT","RESET","DESTROY"
 };
+#endif
 
 struct OutgoingPacket {
 	size_t length;
@@ -564,7 +570,7 @@ struct UTPSocket {
 		va_end(va);
 		buf[4095] = '\0';
 
-		snprintf(buf2, 4096, "%p %s %06u %s", this, addrfmt(addr, addrbuf), conn_id_recv, buf);
+		snprintf(buf2, 4096, "%p %s %06u %s", (void*)this, addrfmt(addr, addrbuf), conn_id_recv, buf);
 		buf2[4095] = '\0';
 
 		ctx->log_unchecked(this, buf2);
@@ -760,6 +766,8 @@ void UTPSocket::send_data(byte* b, size_t length, bandwidth_type_t type, uint32 
 
 void UTPSocket::send_ack(bool synack)
 {
+	(void)synack;
+
 	PacketFormatAckV1 pfa;
 	zeromem(&pfa);
 
@@ -1141,7 +1149,7 @@ void UTPSocket::check_timeouts()
 			bool ignore_loss = false;
 
 			if (cur_window_packets == 1
-				&& ((seq_nr - 1) & ACK_NR_MASK) == mtu_probe_seq
+				&& ((seq_nr - 1u) & ACK_NR_MASK) == mtu_probe_seq
 				&& mtu_probe_seq != 0) {
 				// we only had  a single outstanding packet that timed out, and it was the probe
 				mtu_ceiling = mtu_probe_size - 1;
@@ -1957,12 +1965,12 @@ size_t utp_process_incoming(UTPSocket *conn, const byte *packet, size_t len, boo
 	// from the other peer. Our delay cannot exceed
 	// the rtt of the packet. If it does, clamp it.
 	// this is done in apply_ledbat_ccontrol()
-	int64 min_rtt = INT64_MAX;
+	int64 min_rtt = std::numeric_limits<int64>::max();
 
 	uint64 now = utp_call_get_microseconds(conn->ctx, conn);
 
 	for (int i = 0; i < acks; ++i) {
-		int seq = (conn->seq_nr - conn->cur_window_packets + i) & ACK_NR_MASK;
+		uint32 seq = (conn->seq_nr - conn->cur_window_packets + i) & ACK_NR_MASK;
 		OutgoingPacket *pkt = (OutgoingPacket*)conn->outbuf.get(seq);
 		if (pkt == 0 || pkt->transmissions == 0) continue;
 		assert((int)(pkt->payload) >= 0);
@@ -2387,19 +2395,19 @@ size_t utp_process_incoming(UTPSocket *conn, const byte *packet, size_t len, boo
 
 			// Check if there are additional buffers in the reorder buffers
 			// that need delivery.
-			byte *p = (byte*)conn->inbuf.get(conn->ack_nr+1);
-			if (p == NULL)
+			byte *pp = (byte*)conn->inbuf.get(conn->ack_nr+1);
+			if (pp == NULL)
 				break;
 			conn->inbuf.put(conn->ack_nr+1, NULL);
-			count = *(uint*)p;
+			count = *(uint*)pp;
 			if (count > 0 && conn->state != CS_FIN_SENT) {
 				// Pass the bytes to the upper layer
-				utp_call_on_read(conn->ctx, conn, p + sizeof(uint), count);
+				utp_call_on_read(conn->ctx, conn, pp + sizeof(uint), count);
 			}
 			conn->ack_nr++;
 
 			// Free the element from the reorder buffer
-			free(p);
+			free(pp);
 			assert(conn->reorder_count > 0);
 			conn->reorder_count--;
 		}
@@ -2498,6 +2506,7 @@ UTPSocket::~UTPSocket()
 
 	// Remove object from the global hash table
 	UTPSocketKeyData* kd = ctx->utp_sockets->Delete(UTPSocketKey(addr, conn_id_recv));
+	(void)kd;
 	assert(kd);
 
 	// remove the socket from ack_sockets if it was there also
@@ -2518,7 +2527,7 @@ UTPSocket::~UTPSocket()
 void UTP_FreeAll(struct UTPSocketHT *utp_sockets) {
 	utp_hash_iterator_t it;
 	UTPSocketKeyData* keyData;
-	while ((keyData = utp_sockets->Iterate(it))) {
+	for (keyData = utp_sockets->Iterate(it); keyData; keyData = utp_sockets->Iterate(it)) {
 		delete keyData->socket;
 	}
 }
@@ -2851,11 +2860,20 @@ int utp_process_udp(utp_context *ctx, const byte *buffer, size_t len, const stru
 		// if it's our send id, and we did not initiate the connection, our recv id is id - 1
 		// we have to check every case
 
-		UTPSocketKeyData* keyData;
-		if ( (keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id))) ||
-			((keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id + 1))) && keyData->socket->conn_id_send == id) ||
-			((keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id - 1))) && keyData->socket->conn_id_send == id))
-		{
+		UTPSocketKeyData* keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id));
+		if (!keyData) {
+			keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id + 1));
+			if (keyData && keyData->socket->conn_id_send != id) {
+				keyData = NULL;
+			}
+		}
+		if (!keyData) {
+			keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id - 1));
+			if (keyData && keyData->socket->conn_id_send != id) {
+				keyData = NULL;
+			}
+		}
+		if (keyData) {
 			UTPSocket* conn = keyData->socket;
 
 			#if UTP_DEBUG_LOGGING
@@ -3049,12 +3067,20 @@ static UTPSocket* parse_icmp_payload(utp_context *ctx, const byte *buffer, size_
 		return NULL;
 	}
 
-	UTPSocketKeyData* keyData;
-
-	if ( (keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id))) ||
-		((keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id + 1))) && keyData->socket->conn_id_send == id) ||
-		((keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id - 1))) && keyData->socket->conn_id_send == id))
-	{
+	UTPSocketKeyData* keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id));
+	if (!keyData) {
+		keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id + 1));
+		if (keyData && keyData->socket->conn_id_send != id) {
+			keyData = NULL;
+		}
+	}
+	if (!keyData) {
+		keyData = ctx->utp_sockets->Lookup(UTPSocketKey(addr, id - 1));
+		if (keyData && keyData->socket->conn_id_send != id) {
+			keyData = NULL;
+		}
+	}
+	if (keyData) {
 		return keyData->socket;
 	}
 
@@ -3289,7 +3315,7 @@ void utp_check_timeouts(utp_context *ctx)
 
 	utp_hash_iterator_t it;
 	UTPSocketKeyData* keyData;
-	while ((keyData = ctx->utp_sockets->Iterate(it))) {
+	for (keyData = ctx->utp_sockets->Iterate(it); keyData; keyData = ctx->utp_sockets->Iterate(it)) {
 		UTPSocket *conn = keyData->socket;
 		conn->check_timeouts();
 
@@ -3438,6 +3464,7 @@ utp_socket_stats* utp_get_stats(utp_socket *socket)
 		socket->_stats.mtu_guess = socket->mtu_last ? socket->mtu_last : socket->mtu_ceiling;
 		return &socket->_stats;
 	#else
+		(void)socket;
 		return NULL;
 	#endif
 }

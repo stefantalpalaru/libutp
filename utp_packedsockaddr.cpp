@@ -62,6 +62,8 @@ uint32 PackedSockAddr::compute_hash() const {
 
 void PackedSockAddr::set(const SOCKADDR_STORAGE* sa, socklen_t len)
 {
+	(void)len;
+
 	if (sa->ss_family == AF_INET) {
 		assert(len >= sizeof(sockaddr_in));
 		const sockaddr_in *sin = (sockaddr_in*)sa;

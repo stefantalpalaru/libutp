@@ -43,7 +43,7 @@
 	#include <netinet/ip_icmp.h>
 #endif
 
-#include "utp.h"
+#include <libutp/utp.h>
 
 // options
 int o_debug;
@@ -94,13 +94,14 @@ void pdie(char *err)
 
 void hexdump(const void *p, size_t len)
 {
+    const unsigned char* pc = p;
     int count = 1;
 
     while (len--) {
         if (count == 1)
-            fprintf(stderr, "    %p: ", p);
+            fprintf(stderr, "    %p: ", (void*)pc);
 
-        fprintf(stderr, " %02x", *(unsigned char*)p++ & 0xff);
+        fprintf(stderr, " %02x", *pc++ & 0xff);
 
         if (count++ == 16) {
             fprintf(stderr, "\n");
@@ -114,6 +115,8 @@ void hexdump(const void *p, size_t len)
 
 void handler(int number)
 {
+	(void)number;
+
 	debug("caught signal\n");
 	if (s)
 		utp_close(s);
@@ -178,6 +181,8 @@ uint64 callback_on_read(utp_callback_arguments *a)
 
 uint64 callback_on_firewall(utp_callback_arguments *a)
 {
+	(void)a;
+
 	if (! o_listen) {
 		debug("Firewalling unexpected inbound connection in non-listen mode\n");
 		return 1;

@@ -34,7 +34,7 @@ typedef struct UTPSocket					utp_socket;
 typedef struct struct_utp_context			utp_context;
 
 enum {
-	UTP_UDP_DONTFRAG = 2,	// Used to be a #define as UDP_IP_DONTFRAG
+	UTP_UDP_DONTFRAG = 2	// Used to be a #define as UDP_IP_DONTFRAG
 };
 
 enum {
@@ -50,7 +50,7 @@ enum {
 
 	// socket is being destroyed, meaning all data has been sent if possible.
 	// it is not valid to refer to the socket after this state change occurs
-	UTP_STATE_DESTROYING = 4,
+	UTP_STATE_DESTROYING = 4
 };
 
 extern const char *utp_state_names[];
@@ -59,7 +59,7 @@ extern const char *utp_state_names[];
 enum {
 	UTP_ECONNREFUSED = 0,
 	UTP_ECONNRESET,
-	UTP_ETIMEDOUT,
+	UTP_ETIMEDOUT
 };
 
 extern const char *utp_error_code_names[];
@@ -91,7 +91,7 @@ enum {
 	UTP_RCVBUF,
 	UTP_TARGET_DELAY,
 
-	UTP_ARRAY_SIZE,	// must be last
+	UTP_ARRAY_SIZE	// must be last
 };
 
 extern const char *utp_callback_names[];

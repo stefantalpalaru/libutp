@@ -41,7 +41,7 @@ inline uint32 Read32(const void *p) { return *(uint32*)p; }
 // Get the amount of memory required for the hash parameters and the bucket set
 // Waste a space for an unused bucket in order to ensure the following managed memory have 32-bit aligned addresses
 // TODO:  make this 64-bit clean
-#define BASE_SIZE(bc) (sizeof(utp_hash_t) + sizeof(utp_link_t) * ((bc) + 1))
+#define BASE_SIZE(bc) (sizeof(utp_hash_t) + sizeof(utp_link_t) * ((bc) + 1 - 1))
 
 // Get a pointer to the base of the structure array managed by the hash table
 #define get_bep(h) ((byte*)(h)) + BASE_SIZE((h)->N)

@@ -144,7 +144,7 @@ static uint64 __GetMicroseconds()
 #else // !__APPLE__
 
 #if ! (defined(_POSIX_TIMERS) && _POSIX_TIMERS > 0 && defined(CLOCK_MONOTONIC))
-    #warning "Using non-monotonic function gettimeofday() in UTP_GetMicroseconds()"
+    #pragma message ("Using non-monotonic function gettimeofday() in UTP_GetMicroseconds()")
 #endif
 
 /* Unfortunately, #ifdef CLOCK_MONOTONIC is not enough to make sure that
@@ -241,14 +241,14 @@ uint64 utp_default_get_udp_overhead(utp_callback_arguments *args) {
 	return (args->u1.address->sa_family == AF_INET6) ? UDP_TEREDO_OVERHEAD : UDP_IPV4_OVERHEAD;
 }
 
-uint64 utp_default_get_random(utp_callback_arguments *args) {
+uint64 utp_default_get_random(utp_callback_arguments * /*args*/) {
 	return rand();
 }
 
-uint64 utp_default_get_milliseconds(utp_callback_arguments *args) {
+uint64 utp_default_get_milliseconds(utp_callback_arguments * /*args*/) {
 	return UTP_GetMilliseconds();
 }
 
-uint64 utp_default_get_microseconds(utp_callback_arguments *args) {
+uint64 utp_default_get_microseconds(utp_callback_arguments * /*args*/) {
 	return UTP_GetMicroseconds();
 }

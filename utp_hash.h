@@ -84,7 +84,7 @@ struct utp_hash_t {
 	utp_link_t allocated;
 	utp_link_t used;
 	utp_link_t free;
-	utp_link_t inits[0];
+	utp_link_t inits[1]; // dynamic
 };
 
 #ifdef _MSC_VER
@@ -126,10 +126,10 @@ void utp_hash_free_mem(utp_hash_t *hash);
 template<typename K, typename T> class utpHashTable {
 	utp_hash_t *hash;
 public:
-	static uint compare(const void *k1, const void *k2, size_t ks) {
+	static uint compare(const void *k1, const void *k2, size_t /*ks*/) {
 		return *((K*)k1) == *((K*)k2);
 	}
-	static uint32 compute_hash(const void *k, size_t ks) {
+	static uint32 compute_hash(const void *k, size_t /*ks*/) {
 		return ((K*)k)->compute_hash();
 	}
 	void Init() { hash = NULL; }
