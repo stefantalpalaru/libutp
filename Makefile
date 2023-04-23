@@ -1,5 +1,5 @@
 OBJS     = utp_internal.o utp_utils.o utp_hash.o utp_callbacks.o utp_api.o utp_packedsockaddr.o
-CFLAGS   = -Wall -DPOSIX -g -fno-exceptions $(OPT)
+CFLAGS   = -Wall -DPOSIX -g -fno-exceptions -I"${CURDIR}/include/libutp" -I"${CURDIR}/include" $(OPT)
 OPT ?= -O3
 CXXFLAGS = $(CFLAGS) -fPIC -fno-rtti
 CC       = gcc
