@@ -23,7 +23,7 @@ ifeq ($(strip $(lrt)),0)
   LDFLAGS += -lrt
 endif
 
-all: libutp.so libutp.a ucat ucat-static
+all: libutp.a
 
 libutp.so: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o libutp.so -shared $(OBJS)
