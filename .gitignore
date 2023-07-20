@@ -1,7 +1,48 @@
+# Object files
 *.o
+*.ko
+*.obj
+*.elf
+
+# Libraries
+*.lib
 *.a
+*.lo
+*.la
+
+# Shared objects (inc. Windows DLLs)
+*.dll
 *.so
-ucat
-ucat-static
-tags
+*.so.*
+*.dylib
+
+# autotools
+Makefile
+/autom4te.cache
+/stamp-h1
+/libtool
+/config.status
+/config.h*
+/test-driver
+/test-suite.log
+.libs
+.deps
+.dirstamp
+*.log
+*.trs
+*.tar.gz
+*.gmo
+po/.intltool-merge-cache
+po/POTFILES
+po/stamp-it
+depend
+
+# editors
+*.swp
+*.swo
 *~
+
+# other
+/tags
+/ucat
+/ucat-static
