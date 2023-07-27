@@ -18,6 +18,8 @@ libutp_a_SOURCES = \
 		   include/libutp/utp.h \
 		   include/libutp/utp_types.h
 EXTRA_DIST = \
+	     CMakeLists.txt \
 	     LICENSE \
-	     README.md
+	     README.md \
+	     config.cmake.in
 
