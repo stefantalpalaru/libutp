@@ -21,5 +21,6 @@ EXTRA_DIST = \
 	     CMakeLists.txt \
 	     LICENSE \
 	     README.md \
-	     config.cmake.in
+	     config.cmake.in \
+	     libutp_inet_ntop.cpp
 
