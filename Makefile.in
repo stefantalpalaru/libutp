@@ -103,18 +103,15 @@ DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-LIBRARIES = $(noinst_LIBRARIES)
-ARFLAGS = cru
-AM_V_AR = $(am__v_AR_@AM_V@)
-am__v_AR_ = $(am__v_AR_@AM_DEFAULT_V@)
-am__v_AR_0 = @echo "  AR      " $@;
-am__v_AR_1 = 
-libutp_a_AR = $(AR) $(ARFLAGS)
-libutp_a_LIBADD =
-am_libutp_a_OBJECTS = utp_internal.$(OBJEXT) utp_utils.$(OBJEXT) \
-	utp_hash.$(OBJEXT) utp_callbacks.$(OBJEXT) utp_api.$(OBJEXT) \
-	utp_packedsockaddr.$(OBJEXT)
-libutp_a_OBJECTS = $(am_libutp_a_OBJECTS)
+LTLIBRARIES = $(noinst_LTLIBRARIES)
+libutp_la_LIBADD =
+am_libutp_la_OBJECTS = utp_internal.lo utp_utils.lo utp_hash.lo \
+	utp_callbacks.lo utp_api.lo utp_packedsockaddr.lo
+libutp_la_OBJECTS = $(am_libutp_la_OBJECTS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -130,17 +127,13 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/utp_api.Po \
-	./$(DEPDIR)/utp_callbacks.Po ./$(DEPDIR)/utp_hash.Po \
-	./$(DEPDIR)/utp_internal.Po ./$(DEPDIR)/utp_packedsockaddr.Po \
-	./$(DEPDIR)/utp_utils.Po
+am__depfiles_remade = ./$(DEPDIR)/utp_api.Plo \
+	./$(DEPDIR)/utp_callbacks.Plo ./$(DEPDIR)/utp_hash.Plo \
+	./$(DEPDIR)/utp_internal.Plo \
+	./$(DEPDIR)/utp_packedsockaddr.Plo ./$(DEPDIR)/utp_utils.Plo
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
-am__v_lt_1 = 
 LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
 	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
@@ -175,8 +168,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libutp_a_SOURCES)
-DIST_SOURCES = $(libutp_a_SOURCES)
+SOURCES = $(libutp_la_SOURCES)
+DIST_SOURCES = $(libutp_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -237,7 +230,7 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DHT_CFLAGS = @DHT_CFLAGS@
 DHT_LIBS = @DHT_LIBS@
-DHT_LIBS_QT = @DHT_LIBS_QT@
+DHT_LIBS_QMAKE = @DHT_LIBS_QMAKE@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
@@ -280,27 +273,27 @@ LIBAPPINDICATOR_LIBS = @LIBAPPINDICATOR_LIBS@
 LIBAPPINDICATOR_MINIMUM = @LIBAPPINDICATOR_MINIMUM@
 LIBB64_CFLAGS = @LIBB64_CFLAGS@
 LIBB64_LIBS = @LIBB64_LIBS@
-LIBB64_LIBS_QT = @LIBB64_LIBS_QT@
+LIBB64_LIBS_QMAKE = @LIBB64_LIBS_QMAKE@
 LIBCURL_CFLAGS = @LIBCURL_CFLAGS@
 LIBCURL_LIBS = @LIBCURL_LIBS@
 LIBEVENT_CFLAGS = @LIBEVENT_CFLAGS@
-LIBEVENT_INCLUDEPATH_QT = @LIBEVENT_INCLUDEPATH_QT@
+LIBEVENT_INCLUDEPATH_QMAKE = @LIBEVENT_INCLUDEPATH_QMAKE@
 LIBEVENT_LIBS = @LIBEVENT_LIBS@
-LIBEVENT_LIBS_QT = @LIBEVENT_LIBS_QT@
+LIBEVENT_LIBS_QMAKE = @LIBEVENT_LIBS_QMAKE@
 LIBEVENT_MINIMUM = @LIBEVENT_MINIMUM@
 LIBM = @LIBM@
 LIBNATPMP_CFLAGS = @LIBNATPMP_CFLAGS@
 LIBNATPMP_LIBS = @LIBNATPMP_LIBS@
-LIBNATPMP_LIBS_QT = @LIBNATPMP_LIBS_QT@
+LIBNATPMP_LIBS_QMAKE = @LIBNATPMP_LIBS_QMAKE@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIBUPNP_CFLAGS = @LIBUPNP_CFLAGS@
 LIBUPNP_LIBS = @LIBUPNP_LIBS@
-LIBUPNP_LIBS_QT = @LIBUPNP_LIBS_QT@
+LIBUPNP_LIBS_QMAKE = @LIBUPNP_LIBS_QMAKE@
 LIBUTP_CFLAGS = @LIBUTP_CFLAGS@
 LIBUTP_LIBS = @LIBUTP_LIBS@
-LIBUTP_LIBS_QT = @LIBUTP_LIBS_QT@
+LIBUTP_LIBS_QMAKE = @LIBUTP_LIBS_QMAKE@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
@@ -439,8 +432,8 @@ top_srcdir = @top_srcdir@
 transmissionlocaledir = @transmissionlocaledir@
 AM_CPPFLAGS = -I$(srcdir) -I$(srcdir)/include -I$(srcdir)/include/libutp
 AM_CXXFLAGS = -Wall -Wno-sign-compare -DPOSIX -fno-exceptions -fno-rtti -fpermissive
-noinst_LIBRARIES = libutp.a
-libutp_a_SOURCES = \
+noinst_LTLIBRARIES = libutp.la
+libutp_la_SOURCES = \
 		   utp_internal.cpp \
 		   utp_internal.h \
 		   utp_utils.cpp \
@@ -498,13 +491,19 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 
-clean-noinstLIBRARIES:
-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+	@list='$(noinst_LTLIBRARIES)'; \
+	locs=`for p in $$list; do echo $$p; done | \
+	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
+	      sort -u`; \
+	test -z "$$locs" || { \
+	  echo rm -f $${locs}; \
+	  rm -f $${locs}; \
+	}
 
-libutp.a: $(libutp_a_OBJECTS) $(libutp_a_DEPENDENCIES) $(EXTRA_libutp_a_DEPENDENCIES) 
-	$(AM_V_at)-rm -f libutp.a
-	$(AM_V_AR)$(libutp_a_AR) libutp.a $(libutp_a_OBJECTS) $(libutp_a_LIBADD)
-	$(AM_V_at)$(RANLIB) libutp.a
+libutp.la: $(libutp_la_OBJECTS) $(libutp_la_DEPENDENCIES) $(EXTRA_libutp_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(CXXLINK)  $(libutp_la_OBJECTS) $(libutp_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -512,12 +511,12 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_api.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_callbacks.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_hash.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_internal.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_packedsockaddr.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_utils.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_api.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_callbacks.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_hash.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_internal.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_packedsockaddr.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utp_utils.Plo@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -641,7 +640,7 @@ distdir-am: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile $(LTLIBRARIES)
 installdirs:
 install: install-am
 install-exec: install-exec-am
@@ -675,16 +674,16 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
+clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/utp_api.Po
-	-rm -f ./$(DEPDIR)/utp_callbacks.Po
-	-rm -f ./$(DEPDIR)/utp_hash.Po
-	-rm -f ./$(DEPDIR)/utp_internal.Po
-	-rm -f ./$(DEPDIR)/utp_packedsockaddr.Po
-	-rm -f ./$(DEPDIR)/utp_utils.Po
+		-rm -f ./$(DEPDIR)/utp_api.Plo
+	-rm -f ./$(DEPDIR)/utp_callbacks.Plo
+	-rm -f ./$(DEPDIR)/utp_hash.Plo
+	-rm -f ./$(DEPDIR)/utp_internal.Plo
+	-rm -f ./$(DEPDIR)/utp_packedsockaddr.Plo
+	-rm -f ./$(DEPDIR)/utp_utils.Plo
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -730,12 +729,12 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/utp_api.Po
-	-rm -f ./$(DEPDIR)/utp_callbacks.Po
-	-rm -f ./$(DEPDIR)/utp_hash.Po
-	-rm -f ./$(DEPDIR)/utp_internal.Po
-	-rm -f ./$(DEPDIR)/utp_packedsockaddr.Po
-	-rm -f ./$(DEPDIR)/utp_utils.Po
+		-rm -f ./$(DEPDIR)/utp_api.Plo
+	-rm -f ./$(DEPDIR)/utp_callbacks.Plo
+	-rm -f ./$(DEPDIR)/utp_hash.Plo
+	-rm -f ./$(DEPDIR)/utp_internal.Plo
+	-rm -f ./$(DEPDIR)/utp_packedsockaddr.Plo
+	-rm -f ./$(DEPDIR)/utp_utils.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -757,7 +756,7 @@ uninstall-am:
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles check check-am clean \
-	clean-generic clean-libtool clean-noinstLIBRARIES \
+	clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	cscopelist-am ctags ctags-am distclean distclean-compile \
 	distclean-generic distclean-libtool distclean-tags distdir dvi \
 	dvi-am html html-am info info-am install install-am \

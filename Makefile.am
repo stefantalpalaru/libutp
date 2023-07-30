@@ -1,7 +1,7 @@
 AM_CPPFLAGS = -I$(srcdir) -I$(srcdir)/include -I$(srcdir)/include/libutp
 AM_CXXFLAGS = -Wall -Wno-sign-compare -DPOSIX -fno-exceptions -fno-rtti -fpermissive
-noinst_LIBRARIES = libutp.a
-libutp_a_SOURCES = \
+noinst_LTLIBRARIES = libutp.la
+libutp_la_SOURCES = \
 		   utp_internal.cpp \
 		   utp_internal.h \
 		   utp_utils.cpp \
